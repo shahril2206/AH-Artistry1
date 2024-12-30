@@ -1,2 +1,2 @@
-# AH-Artistry1
+# AH_Artistry
 AH Artistry website repository
