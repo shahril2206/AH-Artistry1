@@ -124,7 +124,7 @@ function build_calendar($conn, $month, $year){
     <script src="https://kit.fontawesome.com/32a41a609f.js" crossorigin="anonymous"></script>
     <title>Book Now | AH Artistry</title>
 
-    <link rel="stylesheet" href="../css/darkmode.css?v=<?php echo time(); ?>" type="text/css">
+    <link rel="stylesheet" href="../css/style.css?v=<?php echo time(); ?>" type="text/css">
 </head>
 <body>
     <header>
