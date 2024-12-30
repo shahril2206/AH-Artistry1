@@ -54,94 +54,83 @@ if(isset($_POST["book_now"])){
     }else{
         $additional_msg = "-";
     }
-    $reserved = "SELECT * FROM appointment WHERE AptDate = '$apt_date' AND AptTime = '$apt_time'";
-    $reserved_result = mysqli_query($conn, $reserved) or die("Error connecting to the database");
 
-    // Check if any row matches the date and time
-    if ($reserved_result->num_rows > 0) {
-    // The date and time are already reserved
+    // send email to admin
+    $subject = "AH_Artistry New Appointment Booking";
+
+    $message = "Here are the booking detail:"."\n";
+    $message .= "Customer Name: " .$cust_name. "\n";
+    $message .= "Customer Email: " .$cust_email. "\n";
+    $message .= "Customer Contact No.: " .$cust_ctc_no. "\n";
+    $message .= "Appointment Date: " .date("d-m-Y", strtotime($apt_date)). "\n";
+    $message .= "Appointment Time: " .date("h:i A", strtotime($apt_time)). "\n";
+    $message .= "Appointment Location: " .$apt_address. "\n";
+    $message .= "Service Booked: " .$apt_service. "\n";
+    $message .= "Message/Additional info: " .$additional_msg. "\n";
+
+    $mail = new PHPMailer(true);
+
+    $mail->isSMTP();
+    $mail->Host = "smtp.gmail.com"; 
+    $mail->SMTPAuth = true;
+    $mail->Username = $system_email; 
+    $mail->Password = "opwfgzdoqseexcod"; 
+    $mail->SMTPSecure = "ssl"; 
+    $mail->Port = 465;
+
+    $mail->setFrom($system_email); 
+    $mail->addAddress($admin_email); 
+    $mail->addReplyTo($cust_email);
+
+    $mail->isHTML(false);
+    $mail->Subject = $subject;
+    $mail->Body = $message;
+
+    // send email to customer to notify the booking succesful
+    $subject = "AH_Artistry New Appointment Booking";
+
+    $message = "You have notify our admin regarding your booking. Here are your booking detail:"."\n";
+    $message .= "Customer Name: " .$cust_name. "\n";
+    $message .= "Customer Email: " .$cust_email. "\n";
+    $message .= "Customer Contact No.: " .$cust_ctc_no. "\n";
+    $message .= "Appointment Date: " .date("d-m-Y", strtotime($apt_date)). "\n";
+    $message .= "Appointment Time: " .date("h:i A", strtotime($apt_time)). "\n";
+    $message .= "Appointment Location: " .$apt_address. "\n";
+    $message .= "Service Booked: " .$apt_service. "\n";
+    $message .= "Message/Additional info: " .$additional_msg. "\n";
+    $message .= "\n*Note: This email is a notification, Do not reply to this email*";
+
+    $mailNotify = new PHPMailer(true);
+
+    $mailNotify->isSMTP();
+    $mailNotify->Host = "smtp.gmail.com"; 
+    $mailNotify->SMTPAuth = true;
+    $mailNotify->Username = $system_email; 
+    $mailNotify->Password = "opwfgzdoqseexcod"; 
+    $mailNotify->SMTPSecure = "ssl"; 
+    $mailNotify->Port = 465;
+
+    $mailNotify->setFrom($system_email); 
+    $mailNotify->addAddress($cust_email); 
+
+    $mailNotify->isHTML(false);
+    $mailNotify->Subject = $subject;
+    $mailNotify->Body = $message;
+
+    // if ($mail->send() && $mailNotify->send()) {
+        
+    //     echo '<script>
+    //             alert("Your booking has been received. We will response you through email or contact no.\n\nThank you!");
+    //             window.location="book.php"
+    //         </script>';
+    // } else {
+    //     echo "Error sending email: " . $mail->ErrorInfo;
+    //     echo "Error sending email: " . $mailNotify->ErrorInfo;
+    // }
     echo '<script>
-            alert("The selected date and time are already reserved. Please choose another slot.");
-            window.location="book.php";
-          </script>';
-    }else{
-        // send email to admin
-        $subject = "AH_Artistry New Appointment Booking";
-
-        $message = "Here are the booking detail:"."\n";
-        $message .= "Customer Name: " .$cust_name. "\n";
-        $message .= "Customer Email: " .$cust_email. "\n";
-        $message .= "Customer Contact No.: " .$cust_ctc_no. "\n";
-        $message .= "Appointment Date: " .date("d-m-Y", strtotime($apt_date)). "\n";
-        $message .= "Appointment Time: " .date("h:i A", strtotime($apt_time)). "\n";
-        $message .= "Appointment Location: " .$apt_address. "\n";
-        $message .= "Service Booked: " .$apt_service. "\n";
-        $message .= "Message/Additional info: " .$additional_msg. "\n";
-
-        $mail = new PHPMailer(true);
-
-        $mail->isSMTP();
-        $mail->Host = "smtp.gmail.com"; 
-        $mail->SMTPAuth = true;
-        $mail->Username = $system_email; 
-        $mail->Password = "opwfgzdoqseexcod"; 
-        $mail->SMTPSecure = "ssl"; 
-        $mail->Port = 465;
-
-        $mail->setFrom($system_email); 
-        $mail->addAddress($admin_email); 
-        $mail->addReplyTo($cust_email);
-
-        $mail->isHTML(false);
-        $mail->Subject = $subject;
-        $mail->Body = $message;
-
-        // send email to customer to notify the booking succesful
-        $subject = "AH_Artistry New Appointment Booking";
-
-        $message = "You have notify our admin regarding your booking. Here are your booking detail:"."\n";
-        $message .= "Customer Name: " .$cust_name. "\n";
-        $message .= "Customer Email: " .$cust_email. "\n";
-        $message .= "Customer Contact No.: " .$cust_ctc_no. "\n";
-        $message .= "Appointment Date: " .date("d-m-Y", strtotime($apt_date)). "\n";
-        $message .= "Appointment Time: " .date("h:i A", strtotime($apt_time)). "\n";
-        $message .= "Appointment Location: " .$apt_address. "\n";
-        $message .= "Service Booked: " .$apt_service. "\n";
-        $message .= "Message/Additional info: " .$additional_msg. "\n";
-        $message .= "\n*Note: This email is a notification, Do not reply to this email*";
-
-        $mailNotify = new PHPMailer(true);
-
-        $mailNotify->isSMTP();
-        $mailNotify->Host = "smtp.gmail.com"; 
-        $mailNotify->SMTPAuth = true;
-        $mailNotify->Username = $system_email; 
-        $mailNotify->Password = "opwfgzdoqseexcod"; 
-        $mailNotify->SMTPSecure = "ssl"; 
-        $mailNotify->Port = 465;
-
-        $mailNotify->setFrom($system_email); 
-        $mailNotify->addAddress($cust_email); 
-
-        $mailNotify->isHTML(false);
-        $mailNotify->Subject = $subject;
-        $mailNotify->Body = $message;
-
-        // if ($mail->send() && $mailNotify->send()) {
-            
-        //     echo '<script>
-        //             alert("Your booking has been received. We will response you through email or contact no.\n\nThank you!");
-        //             window.location="book.php"
-        //         </script>';
-        // } else {
-        //     echo "Error sending email: " . $mail->ErrorInfo;
-        //     echo "Error sending email: " . $mailNotify->ErrorInfo;
-        // }
-        echo '<script>
-                alert("Your booking has been received. We will response you through email or contact no.\n\nThank you!");
-                window.location="book.php"
-                </script>';
-    }
+            alert("Your booking has been received. We will response you through email or contact no.\n\nThank you!");
+            window.location="book.php"
+            </script>';
 }
 
 if(isset($_POST["set_appointment"])){
@@ -154,94 +143,83 @@ if(isset($_POST["set_appointment"])){
     $apt_service = $_POST["apt_service"];
     $price = $_POST["price"];
     $additional_msg = $_POST["message"];
-    $reserved = "SELECT * FROM appointment WHERE AptDate = '$apt_date' AND AptTime = '$apt_time'";
-    $reserved_result = mysqli_query($conn, $reserved) or die("Error connecting to the database");
 
-    // Check if any row matches the date and time
-    if ($reserved_result->num_rows > 0) {
-    // The date and time are already reserved
-    echo '<script>
-            alert("The selected date and time are already reserved. Please choose another slot.");
-            window.location="book.php";
-          </script>';
+    // save to database
+    $new_apt_query = "INSERT INTO appointment (ClientName, ClientEmail, AptAddress, AptDate, AptTime, ServiceID) 
+                        VALUES ('$cust_name', '$cust_email', '$apt_address', '$apt_date', '$apt_time', '$apt_service')";
+    $new_apt = mysqli_query($conn, $new_apt_query);
+
+
+    // after save database, need to do some action for displaying price and additional info/message in email
+
+    $price = 0.00;
+    if($_POST["price"]!=""){
+        $price = $_POST["price"];
     }else{
-        // save to database
-        $new_apt_query = "INSERT INTO appointment (ClientName, ClientEmail, AptAddress, AptDate, AptTime, ServiceID) 
-                            VALUES ('$cust_name', '$cust_email', '$apt_address', '$apt_date', '$apt_time', '$apt_service')";
-        $new_apt = mysqli_query($conn, $new_apt_query);
-
-
-        // after save database, need to do some action for displaying price and additional info/message in email
-
-        $price = 0.00;
-        if($_POST["price"]!=""){
-            $price = $_POST["price"];
-        }else{
-            $price = "Not stated";
-        }
-
-        $additional_msg = "";
-        if($_POST["message"]!=""){
-            $additional_msg = $_POST["msg"];
-        }else{
-            $additional_msg = "-";
-        }
-
-        // get the service name instead of id
-        $service_query = "SELECT * FROM services WHERE ServiceID = '$apt_service' LIMIT 1";
-        $service = mysqli_query($conn, $service_query);
-        $row = $service->fetch_assoc();
-
-
-        // send email to customer
-        $subject = "AH_Artistry Appointment Set";
-
-        $message = "Your appointment has been set! Here are the detail:"."\n";
-        $message .= "Customer Name: " .$cust_name. "\n";
-        $message .= "Customer Email: " .$cust_email. "\n";
-        $message .= "Appointment Date: " .date("d-m-Y", strtotime($apt_date)). "\n";
-        $message .= "Appointment Time: " .date("h:i A", strtotime($apt_time)). "\n";
-        $message .= "Appointment Location: " .$apt_address. "\n";
-        $message .= "Service Booked: " .$row["ServiceName"]. "\n";
-        $message .= "Price: " .$price. "\n";
-        $message .= "Message/Additional info: " .$additional_msg. "\n";
-
-        $mail = new PHPMailer(true);
-
-        $mail->isSMTP();
-        $mail->Host = "smtp.gmail.com"; 
-        $mail->SMTPAuth = true;
-        $mail->Username = $system_email; 
-        $mail->Password = "opwfgzdoqseexcod"; 
-        $mail->SMTPSecure = "ssl"; 
-        $mail->Port = 465;
-
-        $mail->setFrom($system_email); 
-        $mail->addAddress($cust_email); 
-        $mail->addReplyTo($admin_email);
-
-        $mail->isHTML(false);
-        $mail->Subject = $subject;
-        $mail->Body = $message;
-
-        $linkto_day = date("d", strtotime($apt_date));
-        $linkto_month = date("m", strtotime($apt_date));
-        $linkto_year = date("Y", strtotime($apt_date));
-
-        // if ($mail->send()) {
-            
-        //     echo '<script>
-        //             alert("New appointment has been set successfully and an email is sent to the customer");
-        //             window.location="appointments.php?day=' . $linkto_day . '&month=' . $linkto_month . '&year=' . $linkto_year . '"
-        //           </script>';
-        // } else {
-        //     echo "Error sending email: " . $mail->ErrorInfo;
-        // }
-        echo '<script>
-                    alert("New appointment has been set successfully and an email is sent to the customer");
-                    window.location="appointments.php?day=' . $linkto_day . '&month=' . $linkto_month . '&year=' . $linkto_year . '"
-                </script>';
+        $price = "Not stated";
     }
+
+    $additional_msg = "";
+    if($_POST["message"]!=""){
+        $additional_msg = $_POST["msg"];
+    }else{
+        $additional_msg = "-";
+    }
+
+    // get the service name instead of id
+    $service_query = "SELECT * FROM services WHERE ServiceID = '$apt_service' LIMIT 1";
+    $service = mysqli_query($conn, $service_query);
+    $row = $service->fetch_assoc();
+
+
+    // send email to customer
+    $subject = "AH_Artistry Appointment Set";
+
+    $message = "Your appointment has been set! Here are the detail:"."\n";
+    $message .= "Customer Name: " .$cust_name. "\n";
+    $message .= "Customer Email: " .$cust_email. "\n";
+    $message .= "Appointment Date: " .date("d-m-Y", strtotime($apt_date)). "\n";
+    $message .= "Appointment Time: " .date("h:i A", strtotime($apt_time)). "\n";
+    $message .= "Appointment Location: " .$apt_address. "\n";
+    $message .= "Service Booked: " .$row["ServiceName"]. "\n";
+    $message .= "Price: " .$price. "\n";
+    $message .= "Message/Additional info: " .$additional_msg. "\n";
+
+    $mail = new PHPMailer(true);
+
+    $mail->isSMTP();
+    $mail->Host = "smtp.gmail.com"; 
+    $mail->SMTPAuth = true;
+    $mail->Username = $system_email; 
+    $mail->Password = "opwfgzdoqseexcod"; 
+    $mail->SMTPSecure = "ssl"; 
+    $mail->Port = 465;
+
+    $mail->setFrom($system_email); 
+    $mail->addAddress($cust_email); 
+    $mail->addReplyTo($admin_email);
+
+    $mail->isHTML(false);
+    $mail->Subject = $subject;
+    $mail->Body = $message;
+
+    $linkto_day = date("d", strtotime($apt_date));
+    $linkto_month = date("m", strtotime($apt_date));
+    $linkto_year = date("Y", strtotime($apt_date));
+
+    // if ($mail->send()) {
+        
+    //     echo '<script>
+    //             alert("New appointment has been set successfully and an email is sent to the customer");
+    //             window.location="appointments.php?day=' . $linkto_day . '&month=' . $linkto_month . '&year=' . $linkto_year . '"
+    //           </script>';
+    // } else {
+    //     echo "Error sending email: " . $mail->ErrorInfo;
+    // }
+    echo '<script>
+                alert("New appointment has been set successfully and an email is sent to the customer");
+                window.location="appointments.php?day=' . $linkto_day . '&month=' . $linkto_month . '&year=' . $linkto_year . '"
+            </script>';
 }
 
 if(isset($_POST["edit_appointment"])){
@@ -256,77 +234,66 @@ if(isset($_POST["edit_appointment"])){
     $apt_address = $_POST["apt_address"];
     $old_apt_address = $_POST["old_apt_address"];
     $apt_service = $_POST["apt_service"];
-    $reserved = "SELECT * FROM appointment WHERE AptDate = '$apt_date' AND AptTime = '$apt_time'";
-    $reserved_result = mysqli_query($conn, $reserved) or die("Error connecting to the database");
 
-    // Check if any row matches the date and time
-    if ($reserved_result->num_rows > 0) {
-    // The date and time are already reserved
+    // save changes to database
+    $updated_apt_query = "UPDATE appointment SET AptDate = '$apt_date', AptTime = '$apt_time', AptAddress = '$apt_address' WHERE AptID = '$apt_id'";
+    $updated_apt = mysqli_query($conn, $updated_apt_query);
+
+    // send email to customer
+    $subject = "AH_Artistry Appointment Updated";
+
+    $message = "Your appointment is updated! Here are the old detail:"."\n";
+    $message .= "Customer Name: " .$cust_name. "\n";
+    $message .= "Customer Email: " .$cust_email. "\n";
+    $message .= "Appointment Date: " .date("d-m-Y", strtotime($old_apt_date)). "\n";
+    $message .= "Appointment Time: " .date("h:i A", strtotime($old_apt_time)). "\n";
+    $message .= "Appointment Location: " .$old_apt_address. "\n";
+    $message .= "Service Booked: " .$apt_service. "\n\n";
+
+    $message .= "And here are the new detail:"."\n";
+    $message .= "Customer Name: " .$cust_name. "\n";
+    $message .= "Customer Email: " .$cust_email. "\n";
+    $message .= "Appointment Date: " .date("d-m-Y", strtotime($apt_date)). "\n";
+    $message .= "Appointment Time: " .date("h:i A", strtotime($apt_time)). "\n";
+    $message .= "Appointment Location: " .$apt_address. "\n";
+    $message .= "Service Booked: " .$apt_service. "\n";
+
+    $mail = new PHPMailer(true);
+
+    $mail->isSMTP();
+    $mail->Host = "smtp.gmail.com"; 
+    $mail->SMTPAuth = true;
+    $mail->Username = $system_email; 
+    $mail->Password = "opwfgzdoqseexcod"; 
+    $mail->SMTPSecure = "ssl"; 
+    $mail->Port = 465;
+
+    $mail->setFrom($system_email); 
+    $mail->addAddress($cust_email); 
+    $mail->addReplyTo($admin_email);
+
+    $mail->isHTML(false);
+    $mail->Subject = $subject;
+    $mail->Body = $message;
+
+    $linkto_day = date("d", strtotime($apt_date));
+    $linkto_month = date("m", strtotime($apt_date));
+    $linkto_year = date("Y", strtotime($apt_date));
+
+    // if ($mail->send()) {
+        
+    //     echo '<script>
+    //             alert("The appointment selected has been updated successfully and an email is sent to the customer");
+    //             window.location="appointments.php?day=' . $linkto_day . '&month=' . $linkto_month . '&year=' . $linkto_year . '"
+    //         </script>';
+    // } else {
+    //     echo "Error sending email: " . $mail->ErrorInfo;
+    // }
+
     echo '<script>
-            alert("The selected date and time are already reserved. Please choose another slot.");
-            window.location="book.php";
-          </script>';
-    }else{
-        // save changes to database
-        $updated_apt_query = "UPDATE appointment SET AptDate = '$apt_date', AptTime = '$apt_time', AptAddress = '$apt_address' WHERE AptID = '$apt_id'";
-        $updated_apt = mysqli_query($conn, $updated_apt_query);
-
-        // send email to customer
-        $subject = "AH_Artistry Appointment Updated";
-
-        $message = "Your appointment is updated! Here are the old detail:"."\n";
-        $message .= "Customer Name: " .$cust_name. "\n";
-        $message .= "Customer Email: " .$cust_email. "\n";
-        $message .= "Appointment Date: " .date("d-m-Y", strtotime($old_apt_date)). "\n";
-        $message .= "Appointment Time: " .date("h:i A", strtotime($old_apt_time)). "\n";
-        $message .= "Appointment Location: " .$old_apt_address. "\n";
-        $message .= "Service Booked: " .$apt_service. "\n\n";
-
-        $message .= "And here are the new detail:"."\n";
-        $message .= "Customer Name: " .$cust_name. "\n";
-        $message .= "Customer Email: " .$cust_email. "\n";
-        $message .= "Appointment Date: " .date("d-m-Y", strtotime($apt_date)). "\n";
-        $message .= "Appointment Time: " .date("h:i A", strtotime($apt_time)). "\n";
-        $message .= "Appointment Location: " .$apt_address. "\n";
-        $message .= "Service Booked: " .$apt_service. "\n";
-
-        $mail = new PHPMailer(true);
-
-        $mail->isSMTP();
-        $mail->Host = "smtp.gmail.com"; 
-        $mail->SMTPAuth = true;
-        $mail->Username = $system_email; 
-        $mail->Password = "opwfgzdoqseexcod"; 
-        $mail->SMTPSecure = "ssl"; 
-        $mail->Port = 465;
-
-        $mail->setFrom($system_email); 
-        $mail->addAddress($cust_email); 
-        $mail->addReplyTo($admin_email);
-
-        $mail->isHTML(false);
-        $mail->Subject = $subject;
-        $mail->Body = $message;
-
-        $linkto_day = date("d", strtotime($apt_date));
-        $linkto_month = date("m", strtotime($apt_date));
-        $linkto_year = date("Y", strtotime($apt_date));
-
-        // if ($mail->send()) {
-            
-        //     echo '<script>
-        //             alert("The appointment selected has been updated successfully and an email is sent to the customer");
-        //             window.location="appointments.php?day=' . $linkto_day . '&month=' . $linkto_month . '&year=' . $linkto_year . '"
-        //         </script>';
-        // } else {
-        //     echo "Error sending email: " . $mail->ErrorInfo;
-        // }
-
-        echo '<script>
-                    alert("The appointment selected has been updated successfully and an email is sent to the customer");
-                    window.location="appointments.php?day=' . $linkto_day . '&month=' . $linkto_month . '&year=' . $linkto_year . '"
-                </script>';
-    }
+                alert("The appointment selected has been updated successfully and an email is sent to the customer");
+                window.location="appointments.php?day=' . $linkto_day . '&month=' . $linkto_month . '&year=' . $linkto_year . '"
+            </script>';
 }
 
 if(isset($_POST["delete_appointment"])){
