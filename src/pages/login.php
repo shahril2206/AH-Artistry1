@@ -10,7 +10,7 @@ include("../server.php");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login | AH Artistry</title>
-    <link rel="stylesheet" href="../css/style.css?v<?php echo time(); ?>" type="text/css">
+    <link rel="stylesheet" href="../css/darkmode.css?v<?php echo time(); ?>" type="text/css">
 </head>
 <body>
     <form action="" method="post" class="login-form">

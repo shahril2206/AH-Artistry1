@@ -38,7 +38,7 @@ if(isset($_GET["post_id"])){
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;600;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/32a41a609f.js" crossorigin="anonymous"></script>
     <title>Posts | AH Artistry</title>
-    <link rel="stylesheet" href="../css/style.css?v=<?php echo time(); ?>" type="text/css">
+    <link rel="stylesheet" href="../css/darkmode.css?v=<?php echo time(); ?>" type="text/css">
 </head>
 <body>
     <header>
@@ -49,6 +49,7 @@ if(isset($_GET["post_id"])){
                 <li><a class="active" href="posts.php" class="admin-element">POSTS</a></li>
                 <li><a href="profile.php" class="admin-element"><i class="fa-solid fa-user profile-icon"></i>Aiman Hakim</a></li>
                 <li><a href="../logout.php " class="logout">LOGOUT</a></li>
+                <li><a href="../logout.php" class="logout">Booking</a></li>
             </ul>
         </nav>
     </header>
