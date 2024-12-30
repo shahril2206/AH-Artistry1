@@ -49,6 +49,7 @@ if(isset($_GET["post_id"])){
                 <li><a class="active" href="posts.php" class="admin-element">POSTS</a></li>
                 <li><a href="profile.php" class="admin-element"><i class="fa-solid fa-user profile-icon"></i>Aiman Hakim</a></li>
                 <li><a href="../logout.php " class="logout">LOGOUT</a></li>
+                <li><a href="../logout.php" class="logout">Booking</a></li>
             </ul>
         </nav>
     </header>

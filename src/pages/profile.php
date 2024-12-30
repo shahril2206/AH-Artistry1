@@ -35,6 +35,7 @@ if (!isset($_SESSION['admin'])) {
                 <li><a href="posts.php" class="admin-element">POSTS</a></li>
                 <li><a class="active" href="profile.php"><i class="fa-solid fa-user profile-icon"></i>Aiman Hakim</a></li>
                 <li><a href="../logout.php" class="logout">LOGOUT</a></li>
+                <li><a href="../logout.php" class="logout">Booking</a></li>
             </ul>
         </nav>
     </header>
